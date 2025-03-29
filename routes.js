@@ -4,26 +4,36 @@ const router = express.Router();
 const usuarios = require("./data");
 
 // Obtener usuarios
+// con paginación y filtros
+// con token de autorización
+// Ejemplo: /api/usuarios?page=1&limit=5&nombre=Juan
+// Authorization: Bearer token
 router.get("/usuarios", (req, res) => {
-  let filteredUsuarios = usuarios;
+  const { page = 1, limit = 5, age } = req.query;
+  const token = req.headers.authorization;
 
-  if (req.query.nombre) {
-    filteredUsuarios = filteredUsuarios.filter((u) =>
-      u.nombre.toLowerCase().includes(req.query.nombre.toLowerCase())
+  if (!token || token !== `Bearer ${process.env.AUTH_TOKEN}`) {
+    return res.status(401).json({ mensaje: "Token no válido" });
+  }
+
+  let usuariosFiltrados = usuarios;
+
+  if (age){
+    usuariosFiltrados = usuariosFiltrados.filter(
+      (usuario) => usuario.edad === parseInt(age)
     );
   }
 
-  if (req.query.edad) {
-    const edadFilter = parseInt(req.query.edad);
-    filteredUsuarios = filteredUsuarios.filter((u) => u.edad === edadFilter);
-  }
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const paginatedUsuarios = usuariosFiltrados.slice(startIndex, endIndex);
 
-  if (filteredUsuarios.length === 0) {
-    return res.status(404).json({
-      mensaje: "No se encontraron usuarios con los parámetros de búsqueda.",
-    });
-  }
-  res.status(200).json(filteredUsuarios);
+  res.status(200).json({
+    total: usuariosFiltrados.length,
+    page: parseInt(page),
+    limit: parseInt(limit),
+    usuarios: paginatedUsuarios,
+  });
 });
 
 // Obtener usuario
