@@ -73,4 +73,29 @@ router.delete("/usuarios/:id", (req, res) => {
   usuarios.splice(index, 1);
   res.status(200).json({ mensaje: "Usuario eliminado" });
 });
+
+router.post("/usuarios/batch", (req, res) => {
+  const nuevosUsuarios = req.body;
+
+  if (!Array.isArray(nuevosUsuarios)) {
+    return res.status(400).json({ mensaje: "Se esperaba un arreglo de usuarios" });
+  }
+
+  if (nuevosUsuarios.length === 0) {
+    return res.status(400).json({ mensaje: "El arreglo de usuarios no puede estar vacío" });
+  }
+
+  const usuariosAgregados = [];
+  for (const usuario of nuevosUsuarios) {
+    const nuevoUsuario = {
+      id: usuarios.length + 1,
+      nombre: usuario.nombre,
+      edad: usuario.edad
+    };
+    usuarios.push(nuevoUsuario);
+    usuariosAgregados.push(nuevoUsuario);
+  }
+
+  res.status(201).json(usuariosAgregados);
+});
 module.exports = router;
