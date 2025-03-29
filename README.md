@@ -21,7 +21,7 @@ node server.js
 
 4. Abre Postman y selecciona la pestaña "Importar" en la parte superior izquierda.
 
-5. Selecciona la opción "Importar desde archivo" y selecciona el archivo `usuarios.postman_collection.json` que se encuentra en la carpeta del proyecto.
+5. Selecciona la opción "Importar desde archivo" y selecciona el archivo `Maestria-MOD1.postman_collection.json` que se encuentra en la carpeta del proyecto.
 
 6. Una vez importada la colección, podrás ver todas las peticiones disponibles para interactuar con la API de usuarios.
 
