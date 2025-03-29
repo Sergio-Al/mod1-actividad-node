@@ -98,4 +98,13 @@ router.post("/usuarios/batch", (req, res) => {
 
   res.status(201).json(usuariosAgregados);
 });
+
+router.delete("/usuarios", (req, res) => {
+  if (usuarios.length === 0) {
+    return res.status(404).json({ mensaje: "No hay users para eliminar" });
+  }
+
+  usuarios.length = 0;
+  res.status(200).json({ mensaje: "Todos los users han sido eliminados" });
+});
 module.exports = router;
